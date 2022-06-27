@@ -32,7 +32,7 @@ object DatastoreService {
   def apply(cloudDataStore: CloudDataStore): DatastoreService = new DatastoreService(cloudDataStore)
 }
 
-class DatastoreService(private val cloudDataStore: CloudDataStore, kind: Option[String] = None) extends Datastore with ReflectionHelper {
+class DatastoreService(val cloudDataStore: CloudDataStore, kind: Option[String] = None) extends Datastore with ReflectionHelper {
 
   private val keyFactories = collection.mutable.Map[String, KeyFactory]()
 
@@ -194,7 +194,7 @@ class DatastoreService(private val cloudDataStore: CloudDataStore, kind: Option[
     entity.map(datastoreEntityToInstance[E](_, clazz))
   }
 
-  private def getKeyFactory(kind: String) = {
+  def getKeyFactory(kind: String) = {
     keyFactories.getOrElse(kind, {
       val keyFactory = cloudDataStore.newKeyFactory().setKind(kind)
       keyFactories.put(kind, keyFactory)
